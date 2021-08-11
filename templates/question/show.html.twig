@@ -3,32 +3,34 @@
 {% block title %}{{ question }}{% endblock %}
 
 {% block body %}
-<div class="p-2 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-2">
-        <h1 class="display-5 fw-bold">{{ kviz.nazev }}</h1>
-        <p class="col-md-8 fs-6">{{ kviz.popis }}</p>
-    </div>
-</div>
-
-
-<form method="POST" action="{{ path('app_question_show', {'slug': kviz.slug}) }}">
-    {% for otazka in otazky %}
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0 fw-bold">{{ otazka.otazka }}</h6>
-            <div class="d-flex flex-column text-muted pt-3">
-                {% for odpoved in otazka.odpovedi %}
-                    <div class="form-check pb-3 small border-bottom w-100">
-                        <input class="form-check-input" type="radio" name="odpoved-{{ otazka.id }}" id="odpoved-{{ odpoved.id }}">
-                        <label class="form-check-label" for="odpoved-{{ odpoved.id }}">
-                            {{ odpoved.odpoved }}
-                        </label>
-                    </div>
-                {% endfor %}
-
+    {% block kvizUvod %}
+        <div class="p-2 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-2">
+                <h1 class="display-5 fw-bold">{{ kviz.nazev }}</h1>
+                <p class="col-md-8 fs-6">{{ kviz.popis }}</p>
             </div>
         </div>
-    {% endfor %}
-    <button type="submit" class="btn btn-primary">Odeslat</button>
-</form>
+    {% endblock %}
 
+    {% block otazkySeznam %}
+    <form method="POST" action="{{ path('app_question_result', {'slug': kviz.slug}) }}">
+        {% for otazka in kviz.otazky %}
+            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                <h6 class="border-bottom pb-2 mb-0 fw-bold">{{ otazka.otazka }}</h6>
+
+                <div class="d-flex flex-column text-muted pt-3">
+                    {% for odpoved in otazka.odpovedi %}
+                        <div class="form-check pb-3 small border-bottom w-100">
+                            <input class="form-check-input" type="radio" name="{{ otazka.id }}" id="odpoved-{{ odpoved.id }}" value="{{ odpoved.id }}">
+                            <label class="form-check-label" for="odpoved-{{ odpoved.id }}">
+                                {{ odpoved.odpoved }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Odeslat</button>
+    </form>
+    {% endblock %}
 {% endblock %}

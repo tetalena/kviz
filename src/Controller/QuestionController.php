@@ -3,9 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Kviz;
-use App\Entity\Odpoved;
-use App\Entity\Otazka;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +21,37 @@ class QuestionController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/otazka/{slug}/vyhodnoceni/", name="app_question_result")
+     */
+    public function result($slug, EntityManagerInterface $entityManager) {
+        $repositoryKviz = $entityManager->getRepository(Kviz::class);
+        $kviz = $repositoryKviz->findOneBy(['slug' => $slug]);
+
+        $otazky = $kviz->getOtazky()->getValues();
+
+        foreach ($_POST as $idOtazka => $idOdpoved) {
+            $idOdpoved = intval($idOdpoved);
+            foreach ($otazky as $otazka) {
+                if ($otazka->getId() === $idOtazka) {
+                    $odpovedi = $otazka->getOdpovedi();
+                    foreach ($odpovedi as $odpoved) {
+                        if ($odpoved->getId() === $idOdpoved) {
+                            if ($odpoved->getJeSpravna() === TRUE) {
+                                $odpoved->setJeVybrana(TRUE);
+                                $otazka->setJeZodpovezenaSpravne(TRUE);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->render("question/result.html.twig", [
+            "question" => $slug,
+            "kviz" => $kviz,
+        ]);
+    }
 
     /**
      * @Route("/otazka/{slug}/", name="app_question_show")
@@ -33,12 +61,9 @@ class QuestionController extends AbstractController
         $repositoryKviz = $entityManager->getRepository(Kviz::class);
         $kviz = $repositoryKviz->findOneBy(['slug' => $slug]);
 
-        $otazky = $kviz->getOtazky()->getValues();
-
         return $this->render("question/show.html.twig", [
             "question" => $slug,
             "kviz" => $kviz,
-            "otazky" => $otazky,
         ]);
     }
 }

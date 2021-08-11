@@ -35,6 +35,11 @@ class Otazka
      */
     private $kviz;
 
+    /**
+     * @var boolean
+     */
+    private $jeZodpovezenaSpravne = FALSE;
+
     public function __construct()
     {
         $this->odpovedi = new ArrayCollection();
@@ -95,6 +100,18 @@ class Otazka
     public function setKviz(?Kviz $kviz): self
     {
         $this->kviz = $kviz;
+
+        return $this;
+    }
+
+    public function getJeZodpovezenaSpravne(): bool
+    {
+        return $this->jeZodpovezenaSpravne;
+    }
+
+    public function setJeZodpovezenaSpravne(bool $jeZodpovezenaSpravne): self
+    {
+        $this->jeZodpovezenaSpravne = $jeZodpovezenaSpravne;
 
         return $this;
     }
