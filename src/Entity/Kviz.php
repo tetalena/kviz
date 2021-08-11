@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\KvizRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class Kviz
      * @ORM\Column(type="text")
      */
     private $popis;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Otazka::class, mappedBy="kviz")
+     */
+    private $otazky;
+
+    public function __construct()
+    {
+        $this->otazky = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +81,36 @@ class Kviz
     public function setPopis(string $popis): self
     {
         $this->popis = $popis;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Otazka[]
+     */
+    public function getOtazky(): Collection
+    {
+        return $this->otazky;
+    }
+
+    public function addOtazky(Otazka $otazky): self
+    {
+        if (!$this->otazky->contains($otazky)) {
+            $this->otazky[] = $otazky;
+            $otazky->setKviz($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOtazky(Otazka $otazky): self
+    {
+        if ($this->otazky->removeElement($otazky)) {
+            // set the owning side to null (unless already changed)
+            if ($otazky->getKviz() === $this) {
+                $otazky->setKviz(null);
+            }
+        }
 
         return $this;
     }
