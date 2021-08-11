@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Kviz;
+use App\Entity\Odpoved;
+use App\Entity\Otazka;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,16 +26,19 @@ class QuestionController extends AbstractController
 
 
     /**
-     * @Route("/otazka/{slug}", name="app_question_show")
+     * @Route("/otazka/{slug}/", name="app_question_show")
      */
     public function show($slug, EntityManagerInterface $entityManager)
     {
-        $repository = $entityManager->getRepository(Kviz::class);
-        $kviz = $repository->findOneBy(['slug' => $slug]);
-        
+        $repositoryKviz = $entityManager->getRepository(Kviz::class);
+        $kviz = $repositoryKviz->findOneBy(['slug' => $slug]);
+
+        $otazky = $kviz->getOtazky()->getValues();
+
         return $this->render("question/show.html.twig", [
             "question" => $slug,
             "kviz" => $kviz,
+            "otazky" => $otazky,
         ]);
     }
 }
