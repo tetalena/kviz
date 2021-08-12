@@ -20,7 +20,16 @@
         {% endblock %}
     </head>
     <body>
-        <div class="container p-4">  
+        <div class="container p-4">
+            <div class="d-flex justify-content-end align-items-center mb-3">
+                {% if not app.user %}
+                    <a href="{{ path('app_login') }}" class="btn btn-sm btn-light me-2">Přihlášení</a>
+                    <a href="{{ path('app_register') }}" class="btn btn-sm btn-light">Registrace</a>
+                {% else %}
+                    <span class="me-2 text-muted">Dobrý den {{ app.user.username }}</span>
+                    <a href="{{ path('app_logout') }}" class="btn btn-sm btn-light">Odhlásit se</a>
+                {% endif %}
+            </div>
             <header class="pb-3 mb-4 border-bottom text-center">
                 <a class="h1 text-dark text-decoration-none" href="{{ path("app_homepage") }}">Reprodukční grafik</a>
             </header>
