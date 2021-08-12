@@ -24,7 +24,10 @@ V kořenovém adresáři projektu spustíme vývojový HTTP server pomocí aplik
 ```shell
 symfony serve -d
 ```
-Adresu k přístupu ke Kvízu symfony po spuštení serveru vypíše. Typicky se bude jednat `http://127.0.0.1:8000`.HTTP server se pustí jako "démon" (na pozadí). Jeho vypnutí můžeme provést příkazem:
+Adresu k přístupu ke Kvízu symfony po spuštění serveru vypíše. Typicky se bude jednat `http://127.0.0.1:8000`.HTTP server se pustí jako "démon" (na pozadí). Jeho vypnutí můžeme provést příkazem:
 ```shell
 symfony server:stop
 ```
+
+## Administrace
+Aplikace obsahuje chráněnou administrátorskou část pro správu Kvízů. Otázek a Odpovědí na adrese `/admin`. Pro přístup do administrační částí je nutné vytvořit běžného uživatele (například pomocí registračního formuláře na stránce) a následně upravit danému uživateli v databázi vlastnost `roles` na `["ROLE_ADMIN"]` (například pomocí phpMyAdmin).
