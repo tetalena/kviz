@@ -130,4 +130,9 @@ class Kviz
     {
         $this->vysledek = $vysledek;
     }
+
+    public function __toString()
+    {
+        return $this->nazev;
+    }
 }
