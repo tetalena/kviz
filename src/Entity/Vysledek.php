@@ -30,7 +30,7 @@ class Vysledek
     private $procent;
 
     /**
-     * @ORM\OneToOne(targetEntity=Kviz::class, inversedBy="vysledek", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Kviz::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $kviz;

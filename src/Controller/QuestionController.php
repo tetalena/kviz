@@ -15,8 +15,23 @@ class QuestionController extends AbstractController
      */
     public function homepage(EntityManagerInterface $entityManager)
     {
-        $repository = $entityManager->getRepository(Kviz::class);
-        $kvizy = $repository->findAll();
+        $repositoryKviz = $entityManager->getRepository(Kviz::class);
+        $kvizy = $repositoryKviz->findAll();
+
+        $user = $this->getUser();
+
+        if ($user !== NULL) {
+            $repositoryVysledky = $entityManager->getRepository(Vysledek::class);
+            $vysledky = $repositoryVysledky->findBy(['user' => $user]);
+
+            foreach ($vysledky as $vysledek) {
+                foreach ($kvizy as $kviz) {
+                    if ($kviz === $vysledek->getKviz()) {
+                        $kviz->setVysledky($vysledek);
+                    }
+                }
+            }
+        }
 
         return $this->render("question/homepage.html.twig", [
             "kvizy" => $kvizy,
