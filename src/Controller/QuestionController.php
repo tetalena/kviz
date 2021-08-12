@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Kviz;
+use App\Entity\Vysledek;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,6 +17,7 @@ class QuestionController extends AbstractController
     {
         $repository = $entityManager->getRepository(Kviz::class);
         $kvizy = $repository->findAll();
+
         return $this->render("question/homepage.html.twig", [
             "kvizy" => $kvizy,
         ]);
@@ -27,6 +29,10 @@ class QuestionController extends AbstractController
     public function result($slug, EntityManagerInterface $entityManager) {
         $repositoryKviz = $entityManager->getRepository(Kviz::class);
         $kviz = $repositoryKviz->findOneBy(['slug' => $slug]);
+
+        $spravnychOdpovedi = 0;
+
+        $user = $this->getUser();
 
         $otazky = $kviz->getOtazky()->getValues();
 
@@ -40,12 +46,31 @@ class QuestionController extends AbstractController
                             if ($odpoved->getJeSpravna() === TRUE) {
                                 $odpoved->setJeVybrana(TRUE);
                                 $otazka->setJeZodpovezenaSpravne(TRUE);
+                                $spravnychOdpovedi++;
                             }
                         }
                     }
                 }
             }
         }
+
+        if ($user !== NULL) {
+            // Přihlášený uživatel.
+            $repositoryVysledek = $entityManager->getRepository(Vysledek::class);
+            $vysledek = $repositoryVysledek->findOneBy(['user' => $user, 'kviz' => $kviz]);
+            if ($vysledek === NULL) {
+                $vysledek = new Vysledek();
+            }
+
+            $procent = ($spravnychOdpovedi * 100) / count($otazky);
+
+            $vysledek->setUser($user)->setKviz($kviz)->setProcent($procent);
+            $entityManager->persist($vysledek);
+
+            // Finální uložení do dtb.
+            $entityManager->flush();
+        }
+
 
         return $this->render("question/result.html.twig", [
             "question" => $slug,

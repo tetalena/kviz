@@ -39,9 +39,15 @@ class Kviz
      */
     private $otazky;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Vysledek::class, mappedBy="kviz", cascade={"persist", "remove"})
+     */
+    private $vysledek;
+
     public function __construct()
     {
         $this->otazky = new ArrayCollection();
+        $this->vysledeks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,6 +117,23 @@ class Kviz
                 $otazky->setKviz(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVysledek(): ?Vysledek
+    {
+        return $this->vysledek;
+    }
+
+    public function setVysledek(Vysledek $vysledek): self
+    {
+        // set the owning side of the relation if necessary
+        if ($vysledek->getKviz() !== $this) {
+            $vysledek->setKviz($this);
+        }
+
+        $this->vysledek = $vysledek;
 
         return $this;
     }

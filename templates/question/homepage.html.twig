@@ -1,15 +1,35 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-  <div class="d-flex flex-row flex-wrap justify-content-center">
-    {% for kviz in kvizy %}
-        <div class="card text-white bg-secondary mb-3 mx-3" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">{{ kviz.nazev }}</h5>
-                <p class="card-text">{{ kviz.popis }}</p>
-                <a href="{{ path("app_question_show", { slug: kviz.slug }) }}" class="btn btn-primary">vstup do kvízu</a>
+    <div class="d-flex flex-row flex-wrap justify-content-center">
+        {% for kviz in kvizy %}
+            {% set color = 'light text-dark' %}
+            {% if kviz.vysledek != null %}
+                {% if kviz.vysledek.procent > 80 %}
+                    {% set color = 'success text-white' %}
+                {% elseif kviz.vysledek.procent > 50 %}
+                    {% set color = 'warning text-dark' %}
+                {% else %}
+                    {% set color = 'danger text-white' %}
+                {% endif %}
+            {% endif %}
+
+            <div class="card bg-{{ color }} mb-3 mx-3" style="width: 18rem;">
+                <div class="card-header">
+                    {% if kviz.vysledek != null %}
+                        Kvíz ukončen na: {{ kviz.vysledek.procent }}%
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ kviz.nazev }}</h5>
+                    <p class="card-text">{{ kviz.popis }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ path("app_question_show", { slug: kviz.slug }) }}" class="btn btn-{{ color }}">Vstoupit do kvízu</a>
+                </div>
             </div>
-        </div>
-    {% endfor %}
-  </div>
+        {% endfor %}
+    </div>
 {% endblock %}

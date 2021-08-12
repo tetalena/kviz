@@ -31,4 +31,9 @@
             </div>
         </div>
     {% endfor %}
+
+    <div class="d-flex flex-row justify-content-center align-items-center mt-5">
+        <a href="{{ path('app_question_show', { slug: kviz.slug }) }}" class="btn btn-secondary mx-2">Zkusit znovu</a>
+        <a href="{{ path('app_homepage') }}" class="btn btn-lg btn-primary mx-2">Zpět na výběr kurzů</a>
+    </div>
 {% endblock %}

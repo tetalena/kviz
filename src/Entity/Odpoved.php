@@ -30,7 +30,7 @@ class Odpoved
     /**
      * @ORM\Column(type="boolean", options={"default" : false})
      */
-    private $jeSpravna;
+    private $jeSpravna = FALSE;
 
     /**
      * @var boolean
