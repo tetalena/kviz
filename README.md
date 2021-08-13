@@ -4,8 +4,15 @@ semestrální práce – Kvízy
 ## Instalace symfony-cli (nepovinné)
 Dle `https://symfony.com/download` nainstalujeme aplikaci `symfony`.
 
+## Instalace php balíčku
+Nainstalujte si balíček composer: `https://getcomposer.org/download/`.
+Před prvním spuštěním je potřeba stáhnout všechny potřebné balíčky pro běh aplikace Kvíz. 
+```shell
+composer install
+```
+
 ## Příprava databáze Mysql
-Pro kvízy vytvořte vlastní databázi a vlastního uživatele například pomocí nástroje phpMyAdmin. Následně v kořenové složce projektu vytvořte soubor `env.local` a vhodně nahraďte hodnoty v `{}`
+Pro kvízy vytvořte vlastní databázi a vlastního uživatele například pomocí nástroje phpMyAdmin. Následně v kořenové složce projektu vytvořte soubor `.env.local` a vhodně nahraďte hodnoty v `{}`
 ```dotenv
 DATABASE_URL="{řadič}://{uzivatel}:{heslo}@{adresa_server}:{port_serveru}/{databaze}?serverVersion={verze}"
 ```
@@ -24,7 +31,7 @@ V kořenovém adresáři projektu spustíme vývojový HTTP server pomocí aplik
 ```shell
 symfony serve -d
 ```
-Adresu k přístupu ke Kvízu symfony po spuštění serveru vypíše. Typicky se bude jednat `http://127.0.0.1:8000`.HTTP server se pustí jako "démon" (na pozadí). Jeho vypnutí můžeme provést příkazem:
+Symfony po spuštění serveru vypíše adresu k přístupu ke Kvízu. Typicky se bude jednat `http://127.0.0.1:8000`. HTTP server se pustí jako "démon" (na pozadí). Jeho vypnutí můžeme provést příkazem:
 ```shell
 symfony server:stop
 ```

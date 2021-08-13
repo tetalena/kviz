@@ -3,6 +3,20 @@
 {% block title %}{{ question }}{% endblock %}
 
 {% block otazkySeznam %}
+
+    <div class="my-5 d-flex align-items-center">
+        {% if procent > 80 %}
+            <i class="fas fa-grin-stars text-success h1 mx-3"></i>
+            <span class="text-success h3 fw-bold"> {{ spravne }} / {{ kviz.otazky | length }} = {{ procent }}%</span>
+        {% elseif procent > 50 %}
+            <i class="fas fa-meh-rolling-eyes text-warning h1 mx-3"></i>
+            <span class="text-warning h3 fw-bold"> {{ spravne }} / {{ kviz.otazky | length }} = {{ procent }}%</span>
+        {% else %}
+            <i class="fas fa-dizzy text-danger h1 mx-3"></i>
+            <span class="text-danger h3 fw-bold"> {{ spravne }} / {{ kviz.otazky | length }} = {{ procent }}%</span>
+        {% endif %}
+    </div>
+
     {% for otazka in kviz.otazky %}
         <div class="my-3 p-3 bg-body rounded shadow-sm">
             <h6 class="border-bottom pb-2 mb-0 fw-bold">
@@ -17,6 +31,10 @@
                 {% for odpoved in otazka.odpovedi %}
                     {% set pozadi = '' %}
                     {% if odpoved.jeVybrana == 0 and odpoved.jeSpravna == 1 %}
+                        {% set pozadi = 'bg-success bg-gradient text-white' %}
+                    {% endif %}
+
+                    {% if odpoved.jeVybrana == 1 and odpoved.jeSpravna == 0 %}
                         {% set pozadi = 'bg-danger bg-gradient text-white' %}
                     {% endif %}
 

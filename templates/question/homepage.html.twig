@@ -24,7 +24,7 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ kviz.nazev }}</h5>
-                    <p class="card-text">{{ kviz.popis }}</p>
+                    <p class="card-text">{{ kviz.popis | raw }}</p>
                 </div>
                 <div class="card-footer">
                     <a href="{{ path("app_question_show", { slug: kviz.slug }) }}" class="btn btn-{{ color }}">Vstoupit do kvízu</a>

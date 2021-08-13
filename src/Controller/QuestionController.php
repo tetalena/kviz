@@ -58,8 +58,8 @@ class QuestionController extends AbstractController
                     $odpovedi = $otazka->getOdpovedi();
                     foreach ($odpovedi as $odpoved) {
                         if ($odpoved->getId() === $idOdpoved) {
+                            $odpoved->setJeVybrana(TRUE);
                             if ($odpoved->getJeSpravna() === TRUE) {
-                                $odpoved->setJeVybrana(TRUE);
                                 $otazka->setJeZodpovezenaSpravne(TRUE);
                                 $spravnychOdpovedi++;
                             }
@@ -69,6 +69,8 @@ class QuestionController extends AbstractController
             }
         }
 
+        $procent = round(($spravnychOdpovedi * 100) / count($otazky), 1);
+
         if ($user !== NULL) {
             // Přihlášený uživatel.
             $repositoryVysledek = $entityManager->getRepository(Vysledek::class);
@@ -77,7 +79,6 @@ class QuestionController extends AbstractController
                 $vysledek = new Vysledek();
             }
 
-            $procent = ($spravnychOdpovedi * 100) / count($otazky);
 
             $vysledek->setUser($user)->setKviz($kviz)->setProcent($procent);
             $entityManager->persist($vysledek);
@@ -90,6 +91,8 @@ class QuestionController extends AbstractController
         return $this->render("question/result.html.twig", [
             "question" => $slug,
             "kviz" => $kviz,
+            "procent" => $procent,
+            "spravne" => $spravnychOdpovedi,
         ]);
     }
 
